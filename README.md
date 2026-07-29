@@ -231,13 +231,6 @@
 
 ---
 
-## Notes pour le Testeur
-
-### Bugs Potentiels à Vérifier
-1. **Fonction `deleteProductByIndex`** : Le paramètre s'appelle `index` mais la fonction utilise `i` (ligne 177) - risque d'erreur
-2. **Validation des données** : Les valeurs négatives ou non-numériques dans les champs price/taxes/ads/discount peuvent causer des calculs inattendus
-3. **Count avec valeur 0 ou vide** : Vérifier le comportement exact
-
 ### Environnements de Test Recommandés
 - Chrome (dernière version)
 - Firefox (dernière version)
