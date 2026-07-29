@@ -112,7 +112,7 @@
 | 1 | Vérifier la présence du bouton "Delete All" | - | Le bouton est visible |
 | 2 | Cliquer sur "Delete All" | - | Tous les produits sont supprimés |
 | 3 | Vérifier le tableau | - | Tableau vide |
-| 4 | Vérifier le compteur | - | "(0)" affiché |
+| 4 | Vérifier le message | - | "No product Yet" affiché |
 | 5 | Vérifier le bouton "Delete All" | - | Le bouton est masqué |
 | 6 | Vérifier localStorage | - | LocalStorage est vidé |
 
