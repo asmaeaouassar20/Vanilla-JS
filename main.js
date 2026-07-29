@@ -21,23 +21,23 @@ function getDataFromLocalStorage() {
     if (localStorage.products != null) {
         products = JSON.parse(localStorage.products);
     }
-    if(localStorage.lightMode != null){
-        lightMode = JSON.parse(localStorage.lightMode);        
+    if (localStorage.lightMode != null) {
+        lightMode = JSON.parse(localStorage.lightMode);
     }
     manageLightDarkMode();
     showProducts()
 }
 
-function manageLightDarkMode(){
+function manageLightDarkMode() {
     if (lightMode) {
         document.getElementById('modeDisplay').innerText = 'dark mode'
-         document.querySelectorAll(".elmMode").forEach(elm => {
+        document.querySelectorAll(".elmMode").forEach(elm => {
             elm.classList.remove("dark")
         })
-         document.querySelectorAll("input").forEach(elm => {
+        document.querySelectorAll("input").forEach(elm => {
             elm.classList.remove("dark")
         })
-         document.querySelectorAll("button").forEach(elm => {
+        document.querySelectorAll("button").forEach(elm => {
             elm.classList.remove("dark")
         })
     } else {
@@ -46,27 +46,28 @@ function manageLightDarkMode(){
         document.querySelectorAll(".elmMode").forEach(elm => {
             elm.classList.add("dark")
         })
-         document.querySelectorAll("input").forEach(elm => {
+        document.querySelectorAll("input").forEach(elm => {
             elm.classList.add("dark")
         })
-         document.querySelectorAll("button").forEach(elm => {
+        document.querySelectorAll("button").forEach(elm => {
             elm.classList.add("dark")
-        })      
+        })
     }
 }
-function switchLightDarkMode(){
-   lightMode = !lightMode;
-   localStorage.setItem('lightMode',JSON.stringify(lightMode));
-   manageLightDarkMode();
-   getTotal();
+function switchLightDarkMode() {
+    lightMode = !lightMode;
+    localStorage.setItem('lightMode', JSON.stringify(lightMode));
+    manageLightDarkMode();
+    getTotal();
 }
 
 
 
 function displayProducts(productsTable) {
     let tbody = '';
-    for (let i = 0; i < productsTable.length; i++) {
-        tbody += `
+    if (productsTable.length > 0) {
+        for (let i = 0; i < productsTable.length; i++) {
+            tbody += `
                 <tr>
                     <td>${i + 1}</td>
                     <td>${productsTable[i].title}</td>
@@ -74,23 +75,33 @@ function displayProducts(productsTable) {
                     <td>${productsTable[i].taxes}</td>
                     <td>${productsTable[i].ads}</td>
                     <td>${productsTable[i].discount}</td>
-                    <td>${productsTable[i].count}</td>
+                    <td>${productsTable[i].total}</td>
                     <td>${productsTable[i].category}</td>
                     <td><button onclick="prefillInputsToUpdate(${i})" >update</button></td>
                     <td><button onclick="deleteProductByIndex(${i})" >delete</button></td>
                 </tr>
                 `;
+        }
+    }
+    else {
+        tbody = "<tr ><td colspan='10'>No product Yet</td></tr>";
     }
     document.getElementById('tbody').innerHTML = tbody;
+
 }
 
 
 // get total
 function getTotal() {
+
     if (price.value != '') {
         let result = (+price.value + +taxes.value + +ads.value) - discount.value;
-        total.innerHTML = result;        
+        total.innerHTML = result;
         total.style.backgroundColor = lightMode ? 'rgb(146, 202, 146)' : 'rgb(29, 83, 29)'
+        if(+price.value < +discount.value){
+            console.log("tte")
+        total.style.backgroundColor = lightMode ? '#eeb9b5' : '#a00d02';
+        }
     } else {
         total.innerHTML = '';
         total.style.backgroundColor = lightMode ? '#eeb9b5' : '#a00d02';
@@ -195,7 +206,7 @@ function showProducts() {
 
 // delete
 function deleteProductByIndex(index) {
-    products.splice(i, 1);
+    products.splice(index, 1);
     localStorage.products = JSON.stringify(products);
     showProducts();
 }
@@ -254,8 +265,13 @@ function cleanData(product) {
     return (
         product.title != ''
         && product.price != ''
+        && +product.price >0
         && product.category != ''
+        && +product.taxes>=0
+        && +product.ads>=0
+        && +product.discount>=0
         && product.count < 100
+        && +product.price > +product.discount
     )
 }
 
