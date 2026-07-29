@@ -17,7 +17,7 @@
 
 | Étape | Action | Données de test | Résultat attendu |
 |-------|--------|-----------------|------------------|
-| 1 | Saisir un prix | price = 100 | Le champ total doit rester vide (fond rouge) |
+| 1 | Saisir un prix | price = 100 | La valeur du champ total change (fond vert) |
 | 2 | Ajouter les taxes | taxes = 20 | Total = 120 (fond vert) |
 | 3 | Ajouter les frais | ads = 10 | Total = 130 (fond vert) |
 | 4 | Ajouter une remise | discount = 30 | Total = 100 (fond vert) |
