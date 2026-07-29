@@ -36,7 +36,7 @@
 | 1 | Remplir tous les champs obligatoires | title="iPhone", price="999", category="Électronique" | - |
 | 2 | Ajouter des informations optionnelles | taxes="100", ads="50", discount="149" | Total calculé = 1000 |
 | 3 | Laisser count vide ou à 1 | count="" ou count="1" | - |
-| 4 | Cliquer sur "Create" | - | Produit ajouté au tableau |
+| 4 | Cliquer sur "Create" | - | Produit ajouté au tableau et les champs se vident |
 | 5 | Vérifier le tableau | - | 1 ligne avec les données saisies |
 | 6 | Vérifier localStorage | - | Le produit est sauvegardé |
 | 7 | Vérifier le compteur | - | "(1)" affiché |
