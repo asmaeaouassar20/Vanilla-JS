@@ -197,7 +197,7 @@
 
 | Étape | Action | Données de test | Résultat attendu |
 |-------|--------|-----------------|------------------|
-| 1 | Prix négatif | price="-50" | Total calculé avec valeur négative mais aucun produit créé |
+| 1 | Prix négatif | price="-50" | Total calculé avec valeur négative mais aucun produit créé + font du total est rouge |
 | 2 | Prix avec texte | price="abc" | NaN ou 0 dans le calcul du total et aucun produit créé |
 | 3 | Remise supérieure au total | discount="1000" (prix=100) | Total négatif avec un font rouge et aucun produit créé |
 | 4 | Valeurs décimales | price="99.99" | Total calculé correctement |
