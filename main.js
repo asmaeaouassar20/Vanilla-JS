@@ -22,7 +22,7 @@ function getDataFromLocalStorage() {
         products = JSON.parse(localStorage.products);
     }
     if(localStorage.lightMode != null){
-        lightMode = localStorage.lightMode;        
+        lightMode = JSON.parse(localStorage.lightMode);        
     }
     manageLightDarkMode();
     showProducts()
@@ -56,8 +56,9 @@ function manageLightDarkMode(){
 }
 function switchLightDarkMode(){
    lightMode = !lightMode;
-   localStorage.setItem('lightMode',lightMode);
+   localStorage.setItem('lightMode',JSON.stringify(lightMode));
    manageLightDarkMode();
+   getTotal();
 }
 
 
@@ -88,11 +89,11 @@ function displayProducts(productsTable) {
 function getTotal() {
     if (price.value != '') {
         let result = (+price.value + +taxes.value + +ads.value) - discount.value;
-        total.innerHTML = result;
-        total.style.backgroundColor = 'rgb(146, 202, 146)';
+        total.innerHTML = result;        
+        total.style.backgroundColor = lightMode ? 'rgb(146, 202, 146)' : 'rgb(29, 83, 29)'
     } else {
         total.innerHTML = '';
-        total.style.backgroundColor = '#eeb9b5';
+        total.style.backgroundColor = lightMode ? '#eeb9b5' : '#a00d02';
     }
 }
 

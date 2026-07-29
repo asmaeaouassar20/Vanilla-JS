@@ -56,10 +56,7 @@ input.dark:focus {
     border-radius: 4px;
 }
 
-#total.dark {
-    background: #a00d02;
-    color: #fff;
-}
+
 
 #total::before {
     content: 'Total: ';
