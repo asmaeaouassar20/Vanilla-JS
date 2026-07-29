@@ -6,22 +6,22 @@
         <title>CRUDS</title>
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body>        
+    <body class="elmMode">        
         <div class="crud">
             <div class="head">
                 <h2>crud</h2>
                 <p>PRODUCT MANAGEMENT SYSTEM</p>
-                <button>switch to</button>
+                <button onclick="switchLightDarkMode()">switch to <span id="modeDisplay"></span></button>
             </div>
 
             <div class="inputs">
                 <input placeholder="title" type="text" id="title" />
                 <div class="price">
-                    <input type="number" id="price" placeholder="price">
-                    <input type="number" id="taxes" placeholder="taxes">
-                    <input type="number" id="ads" placeholder="ads">
-                    <input type="number" id="discount" placeholder="discount">
-                    <small id="total">2003</small>
+                    <input onkeyup="getTotal()" type="number" id="price" placeholder="price">
+                    <input onkeyup="getTotal()" type="number" id="taxes" placeholder="taxes">
+                    <input onkeyup="getTotal()" type="number" id="ads" placeholder="ads">
+                    <input onkeyup="getTotal()" type="number" id="discount" placeholder="discount">
+                    <small id="total" class="elmMode">2003</small>
                 </div>
                 <input type="number" id="count" placeholder="count">
                 <input type="text" id="category" placeholder="category">
@@ -30,12 +30,13 @@
 
             <div class="outputs">
                 <div class="searchBlock">
-                    <input type="text"  id="search" placeholder="Search">
+                    <input type="text" onkeyup="searchInProducts(this.value)" id="search" >
                     <div class="btnSearch">
-                        <button id="searchByTitle">search By Title</button>
-                        <button id="searchByCategory">search By Category</button>
+                        <button onclick="changeSearchBy('title')" id="searchByTitle">search By Title</button>
+                        <button onclick="changeSearchBy('category')" id="searchByCategory">search By Category</button>
                     </div>
                 </div>
+                <button id="deleteAllSection" onclick="deleteAll()">delete all<span id="totalProducts"></span></button>
                 <table>
                     <thead>
                         <tr>
@@ -51,46 +52,13 @@
                             <th>delete</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>samsung</td>
-                            <td>2000</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>2100</td>
-                            <td>phone</td>
-                            <td><button id="update">update</button></td>
-                            <td><button id="delete">delete</button></td>
-                        </tr>
-                         <tr>
-                            <td>1</td>
-                            <td>samsung</td>
-                            <td>2000</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>2100</td>
-                            <td>phone</td>
-                            <td><button id="update">update</button></td>
-                            <td><button id="delete">delete</button></td>
-                        </tr>
-                         <tr>
-                            <td>1</td>
-                            <td>samsung</td>
-                            <td>2000</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>100</td>
-                            <td>2100</td>
-                            <td>phone</td>
-                            <td><button id="update">update</button></td>
-                            <td><button id="delete">delete</button></td>
-                        </tr>
+                    <tbody id="tbody">
+                      
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <script src="main.js"></script>
     </body>
 </html>

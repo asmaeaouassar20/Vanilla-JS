@@ -20,6 +20,9 @@ body.dark {
     text-transform: uppercase;
     margin: 10px 0;
 }
+.head > *{
+    margin: 5px 0;
+}
 
 input {
     width: 100%;
@@ -73,6 +76,7 @@ button {
 
 button:hover {
     letter-spacing: 2px;
+    background-color: plum;
 }
 
 button.dark {
@@ -87,6 +91,7 @@ button.dark:hover {
 .btnSearch {
     display: flex;
     justify-content: space-between;
+    margin: 12px 0;
 }
 
 .btnSearch button {
@@ -106,4 +111,12 @@ table th {
 td,
 th {
     padding: 5px;
+}
+
+#deleteAllSection{
+    display: none;
+    margin: 20px 0;
+}
+#search{
+    display: none;
 }
