@@ -1,94 +1,252 @@
+<hr/>
+
 # Tests Cases
-# Cas de tests — CRUD Product Management System
 
-> À exécuter manuellement dans le navigateur (ouvrir la console DevTools pour surveiller les erreurs JS).
-> Avant chaque section "Nouvelle session", faire `localStorage.clear()` puis recharger la page.
+<hr/>
 
----
-
-## 1. Mode clair / sombre (Light/Dark Mode)
-
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 1.1 | Charger la page pour la première fois (localStorage vide) | Le mode par défaut est clair (`lightMode = true`), bouton affiche "switch to dark mode" |
-| 1.2 | Cliquer sur le bouton switch | Le fond passe en sombre, tous les éléments `.elmMode`, `input`, `button` reçoivent la classe `.dark` |
-| 1.3 | Vérifier la couleur du `<small id="total">` | Le fond change en sombre (`#a00d02` ou `rgb(29,83,29)` selon présence de prix) |
-| 1.4 | Recliquer sur le bouton | Retour au mode clair, classe `.dark` retirée partout |
-| 1.5 | Passer en mode sombre puis **recharger la page (F5)** | Le mode sombre doit être conservé après rechargement |
-| 1.6 | Inspecter `localStorage.lightMode` dans la console | Doit contenir la string `"false"` (mode sombre) ou `"true"` (mode clair) |
+## Informations Générales
+- **Application**: Système de gestion de produits avec CRUD
+- **Stockage**: LocalStorage
+- **Fonctionnalités**: Création, Lecture, Mise à jour, Suppression, Recherche, Mode sombre/clair
 
 ---
 
-## 2. Création de produit (Create)
+## TC-01: Calcul du Total
+**Priorité**: Haute  
+**Précondition**: Tous les champs sont vides
 
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 2.1 | Remplir title="Souris", price=50, taxes=5, ads=2, discount=1, count=1, category="Informatique" puis cliquer Create | Le produit apparaît dans le tableau avec total = 56 |
-| 2.2 | Laisser title vide et cliquer Create | Le produit n'est PAS ajouté (validation `cleanData`) |
-| 2.3 | Laisser price vide et cliquer Create | Le produit n'est PAS ajouté |
-| 2.4 | Laisser category vide et cliquer Create | Le produit n'est PAS ajouté |
-| 2.5 | Mettre count=150 (>100) et cliquer Create | Le produit n'est PAS ajouté |
-| 2.6 | Mettre count=3 et remplir les autres champs, cliquer Create | Le produit est dupliqué 3 fois dans le tableau |
-| 2.7 | Créer un produit puis recharger la page | Le produit doit toujours être présent (persistance localStorage) |
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Saisir un prix | price = 100 | Le champ total doit rester vide (fond rouge) |
+| 2 | Ajouter les taxes | taxes = 20 | Total = 120 (fond vert) |
+| 3 | Ajouter les frais | ads = 10 | Total = 130 (fond vert) |
+| 4 | Ajouter une remise | discount = 30 | Total = 100 (fond vert) |
+| 5 | Effacer le prix | price = "" | Total doit se vider (fond rouge) |
 
----
-
-## 3. Calcul du total (getTotal)
-
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 3.1 | Laisser price vide, taper dans taxes | `<small id="total">` reste vide, fond rouge/rose |
-| 3.2 | price=100, taxes=10, ads=5, discount=15 | Total affiché = 100 |
-| 3.3 | price=100, sans remplir taxes/ads/discount | Total = 100 (les champs vides comptent comme 0 grâce au `+`) |
-| 3.4 | Effacer le champ price après l'avoir rempli | Le total redevient vide, fond repasse en rouge/rose |
+**Formule**: Total = (Prix + Taxes + Frais) - Remise
 
 ---
 
-## 4. Mise à jour de produit (Update)
+## TC-02: Création d'un Produit Unique
+**Priorité**: Haute  
+**Précondition**: Formulaire vierge, localStorage vide
 
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 4.1 | Cliquer sur "update" d'une ligne du tableau | Les champs se pré-remplissent avec les valeurs du produit, le bouton "Create" devient "update", le champ count est masqué |
-| 4.2 | Modifier le title puis cliquer sur "update" (bouton submit) | Le produit est modifié à sa position d'origine dans le tableau, le bouton redevient "Create" |
-| 4.3 | Cliquer sur "update" d'une ligne, puis vider le title et soumettre | La mise à jour est refusée (validation), mais le formulaire reste en mode "update" |
-| 4.4 | Faire un update puis recharger la page | La modification est bien persistée |
-
----
-
-## 5. Suppression (Delete)
-
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 5.1 | Cliquer sur "delete" d'une ligne | ⚠️ **Bug attendu** : `deleteProductByIndex(index)` utilise une variable `i` non définie → erreur en console (`i is not defined`), le produit n'est pas supprimé |
-| 5.2 | Créer au moins 1 produit | Le bouton "delete all" devient visible |
-| 5.3 | Cliquer sur "delete all" | Tous les produits disparaissent, `localStorage` est entièrement vidé (y compris `lightMode`), le tableau est vide |
-| 5.4 | Après "delete all", recharger la page | Le mode repasse en clair par défaut (puisque `localStorage.clear()` supprime aussi la préférence de thème) |
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Remplir tous les champs obligatoires | title="iPhone", price="999", category="Électronique" | - |
+| 2 | Ajouter des informations optionnelles | taxes="100", ads="50", discount="149" | Total calculé = 1000 |
+| 3 | Laisser count vide ou à 1 | count="" ou count="1" | - |
+| 4 | Cliquer sur "Create" | - | Produit ajouté au tableau |
+| 5 | Vérifier le tableau | - | 1 ligne avec les données saisies |
+| 6 | Vérifier localStorage | - | Le produit est sauvegardé |
+| 7 | Vérifier le compteur | - | "(1)" affiché |
+| 8 | Vérifier les champs | - | Tous les champs sont vidés |
 
 ---
 
-## 6. Recherche (Search)
+## TC-03: Création de Produits Multiples (Count > 1)
+**Priorité**: Haute  
+**Précondition**: Formulaire vierge
 
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 6.1 | Cliquer sur "search By Title" | Le champ recherche apparaît avec placeholder "search by title" |
-| 6.2 | Taper une partie du titre d'un produit existant | Seuls les produits correspondants s'affichent |
-| 6.3 | Cliquer sur "search By Category" puis taper une catégorie | Seuls les produits de cette catégorie s'affichent |
-| 6.4 | Taper une valeur en majuscules alors que les produits sont stockés en minuscules | Le résultat doit quand même matcher (recherche insensible à la casse via `toLowerCase()`) |
-| 6.5 | Taper une valeur qui ne correspond à aucun produit | Le tableau devient vide |
-
----
-
-## 7. Persistance générale (localStorage)
-
-| # | Étape | Résultat attendu |
-|---|-------|-------------------|
-| 7.1 | Créer plusieurs produits, fermer l'onglet, le rouvrir | Tous les produits doivent être toujours là |
-| 7.2 | Inspecter `localStorage.products` en console | Doit être un JSON valide (tableau d'objets produit) |
-| 7.3 | Corrompre manuellement `localStorage.products` (ex: `localStorage.products = "abc"`) puis recharger | ⚠️ **Bug attendu** : `JSON.parse("abc")` lève une exception, la page ne charge pas correctement |
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Remplir les champs obligatoires | title="Câble USB", price="15", category="Accessoires" | - |
+| 2 | Définir count > 1 | count = 5 | - |
+| 3 | Cliquer sur "Create" | - | 5 produits identiques ajoutés |
+| 4 | Vérifier le tableau | - | 5 lignes identiques |
+| 5 | Vérifier le compteur | - | "(5)" affiché |
 
 ---
 
-## Bugs déjà identifiés à vérifier pendant les tests
-- [ ] `deleteProductByIndex` utilise `i` au lieu de `index` (variable non définie).
-- [ ] `deleteAll()` appelle `localStorage.clear()` au lieu de supprimer uniquement la clé `products`, ce qui efface aussi la préférence `lightMode`.
-- [ ] Aucune vérification anti-XSS lors de l'injection des données produit dans `innerHTML` (`displayProducts`).
+## TC-04: Validation des Données (cleanData)
+**Priorité**: Haute  
+**Précondition**: Formulaire vierge
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Cliquer sur "Create" sans rien remplir | Tous les champs vides | Aucun produit créé |
+| 2 | Remplir uniquement le titre | title="Test" | Aucun produit créé |
+| 3 | Remplir titre et prix mais pas catégorie | title="Test", price="10" | Aucun produit créé |
+| 4 | Remplir tous les champs mais count ≥ 100 | title="Test", price="10", category="Cat", count=100 | Aucun produit créé |
+| 5 | Remplir tous les champs avec count = 99 | title="Test", price="10", category="Cat", count=99 | 99 produits créés |
+
+---
+
+## TC-05: Mise à Jour d'un Produit
+**Priorité**: Haute  
+**Précondition**: Au moins un produit existant dans le tableau
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Cliquer sur "update" d'un produit existant | - | Les champs sont remplis avec les données du produit |
+| 2 | Vérifier le bouton submit | - | Le texte passe à "update" |
+| 3 | Vérifier le champ count | - | Le champ count est masqué |
+| 4 | Vérifier le scroll | - | La page défile vers le haut |
+| 5 | Modifier le titre | title="Produit Modifié" | - |
+| 6 | Cliquer sur "update" | - | Le produit est mis à jour dans le tableau |
+| 7 | Vérifier le bouton submit | - | Le texte revient à "create" |
+| 8 | Vérifier le champ count | - | Le champ count est réaffiché |
+
+---
+
+## TC-06: Suppression d'un Produit
+**Priorité**: Haute  
+**Précondition**: Au moins 2 produits dans le tableau
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Noter le nombre total de produits | - | Ex: (5) |
+| 2 | Cliquer sur "delete" du 2ème produit | - | Le produit est supprimé |
+| 3 | Vérifier le tableau | - | Le produit n'apparaît plus |
+| 4 | Vérifier le compteur | - | "(4)" affiché |
+| 5 | Vérifier localStorage | - | Le produit n'est plus dans le stockage |
+
+---
+
+## TC-07: Suppression de Tous les Produits
+**Priorité**: Moyenne  
+**Précondition**: Plusieurs produits dans le tableau
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Vérifier la présence du bouton "Delete All" | - | Le bouton est visible |
+| 2 | Cliquer sur "Delete All" | - | Tous les produits sont supprimés |
+| 3 | Vérifier le tableau | - | Tableau vide |
+| 4 | Vérifier le compteur | - | "(0)" affiché |
+| 5 | Vérifier le bouton "Delete All" | - | Le bouton est masqué |
+| 6 | Vérifier localStorage | - | LocalStorage est vidé |
+
+---
+
+## TC-08: Recherche par Titre
+**Priorité**: Moyenne  
+**Précondition**: Produits avec titres variés (ex: "iPhone 12", "iPhone 13", "Samsung Galaxy", "iPhone Case")
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Cliquer sur "Search by Title" | - | Champ de recherche affiché avec placeholder "search by title" |
+| 2 | Saisir un terme de recherche | "iphone" | - |
+| 3 | Vérifier le tableau | - | 3 produits affichés (iPhone 12, iPhone 13, iPhone Case) |
+| 4 | Saisir un terme inexistant | "nokia" | Tableau vide |
+| 5 | Effacer la recherche | "" | Tous les produits réapparaissent |
+
+**Note**: La recherche est insensible à la casse (conversion en minuscules)
+
+---
+
+## TC-09: Recherche par Catégorie
+**Priorité**: Moyenne  
+**Précondition**: Produits avec catégories variées
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Cliquer sur "Search by Category" | - | Champ de recherche avec placeholder "search by category" |
+| 2 | Saisir une catégorie | "électronique" | Produits de cette catégorie affichés |
+| 3 | Changer le mode de recherche | Cliquer sur "Search by Title" | Le focus revient sur le champ de recherche |
+
+---
+
+## TC-10: Mode Sombre/Clair
+**Priorité**: Basse  
+**Précondition**: État initial (light mode par défaut)
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Vérifier le texte du bouton | - | "dark mode" affiché |
+| 2 | Vérifier les classes CSS | - | Aucune classe "dark" sur les éléments |
+| 3 | Cliquer sur le bouton de mode | - | - |
+| 4 | Vérifier le texte du bouton | - | "light mode" affiché |
+| 5 | Vérifier les classes CSS | - | Classes "dark" ajoutées aux éléments |
+| 6 | Recharger la page | - | Le mode sombre est conservé |
+| 7 | Cliquer à nouveau | - | Retour au mode clair |
+| 8 | Vérifier localStorage | - | lightMode = false puis true |
+
+---
+
+## TC-11: Persistance des Données (LocalStorage)
+**Priorité**: Haute  
+**Précondition**: Application chargée
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Créer 2 produits | Produit A et Produit B | Produits visibles dans le tableau |
+| 2 | Fermer et recharger la page | - | Les 2 produits sont toujours présents |
+| 3 | Modifier le Produit A | - | Modification persistante après rechargement |
+| 4 | Supprimer le Produit B | - | Suppression persistante après rechargement |
+
+---
+
+## TC-12: Cas Limites - Count
+**Priorité**: Moyenne  
+**Précondition**: Formulaire rempli avec données valides
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | count = 0 | count=0 | 1 produit créé (comportement par défaut) |
+| 2 | count = 1 | count=1 | 1 produit créé |
+| 3 | count = 99 | count=99 | 99 produits créés |
+| 4 | count = 100 | count=100 | Aucun produit créé (validation) |
+| 5 | count = -1 | count=-1 | 1 produit créé (ou rejeté selon validation) |
+| 6 | count = "abc" | count="abc" | À vérifier - conversion en NaN |
+
+---
+
+## TC-13: Cas Limites - Valeurs Numériques
+**Priorité**: Basse  
+**Précondition**: Formulaire avec titre et catégorie remplis
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Prix négatif | price="-50" | Total calculé avec valeur négative |
+| 2 | Prix avec texte | price="abc" | NaN ou 0 dans le calcul du total |
+| 3 | Remise supérieure au total | discount="1000" (prix=100) | Total négatif |
+| 4 | Valeurs décimales | price="99.99" | Total calculé correctement |
+
+---
+
+## TC-14: Comportement du Bouton Delete All
+**Priorité**: Basse  
+**Précondition**: Variable - avec et sans produits
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Sans produit dans le tableau | products = [] | Section "deleteAll" masquée |
+| 2 | Ajouter un produit | - | Section "deleteAll" visible |
+| 3 | Supprimer le dernier produit | - | Section "deleteAll" masquée |
+
+---
+
+## TC-15: Réinitialisation après Création
+**Priorité**: Moyenne  
+**Précondition**: Formulaire rempli, mode = "create"
+
+| Étape | Action | Données de test | Résultat attendu |
+|-------|--------|-----------------|------------------|
+| 1 | Créer un produit | Données valides | - |
+| 2 | Vérifier le titre | - | Champ vidé |
+| 3 | Vérifier le prix | - | Champ vidé |
+| 4 | Vérifier le total | - | Affichage vidé, fond rouge |
+| 5 | Vérifier le count | - | Champ vidé |
+| 6 | Vérifier la catégorie | - | Champ vidé |
+
+---
+
+## Notes pour le Testeur
+
+### Bugs Potentiels à Vérifier
+1. **Fonction `deleteProductByIndex`** : Le paramètre s'appelle `index` mais la fonction utilise `i` (ligne 177) - risque d'erreur
+2. **Validation des données** : Les valeurs négatives ou non-numériques dans les champs price/taxes/ads/discount peuvent causer des calculs inattendus
+3. **Count avec valeur 0 ou vide** : Vérifier le comportement exact
+
+### Environnements de Test Recommandés
+- Chrome (dernière version)
+- Firefox (dernière version)
+- Edge (dernière version)
+- Safari (si disponible)
+
+### Types de Tests
+- ✅ Tests fonctionnels
+- ✅ Tests de validation
+- ✅ Tests d'interface utilisateur
+- ✅ Tests de persistance
+- ⚠️ Tests de performance (count=99)
