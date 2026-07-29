@@ -186,8 +186,8 @@
 | 2 | count = 1 | count=1 | 1 produit créé |
 | 3 | count = 99 | count=99 | 99 produits créés |
 | 4 | count = 100 | count=100 | Aucun produit créé (validation) |
-| 5 | count = -1 | count=-1 | 1 produit créé (ou rejeté selon validation) |
-| 6 | count = "abc" | count="abc" | À vérifier - conversion en NaN |
+| 5 | count = -1 | count=-1 | 1 produit créé  |
+| 6 | count = "abc" | count="abc" | Aucun produit crée |
 
 ---
 
